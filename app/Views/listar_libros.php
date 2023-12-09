@@ -265,29 +265,100 @@
         <!-- Pestañas -->
         <ul class="nav nav-tabs" id="myTabs">
             <li class="nav-item">
-                <a class="nav-link active" id="tab1" data-bs-toggle="tab" href="#content1">View</a>
+                <a class="nav-link active" id="tab1" data-bs-toggle="tab" href="#ver_libros">View</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="tab2" data-bs-toggle="tab" href="#content2">Create</a>
+                <a class="nav-link" id="tab2" data-bs-toggle="tab" href="#crear_libro">Create</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="tab3" data-bs-toggle="tab" href="#content3">Edit</a>
+                <a class="nav-link" id="tab3" data-bs-toggle="tab" href="#editar_libro">Edit</a>
             </li>
         </ul>
 
         <!-- Contenido de las Pestañas -->
+        <!-- <?php print_r($libros); ?> -->
         <div class="tab-content mt-3">
-            <div class="tab-pane fade show active" id="content1">
+            <div class="tab-pane fade show active" id="ver_libros">
                 <h3>Libros</h3>
-                <p>Este es el contenido de la primera pestaña.</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>Editorial</th>
+                            <th>Precio</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí irán los datos de los libros -->
+                        <?php foreach ($libros as $libro) : ?>
+                            <tr>
+                                <td><?php echo $libro['titulo']; ?></td>
+                                <td><?php echo $libro['autor']; ?></td>
+                                <td><?php echo $libro['editorial']; ?></td>
+                                <td><?php echo $libro['precio']; ?></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary">Editar</button>
+                                    <button type="button" class="btn btn-danger">Eliminar</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <!-- Puedes agregar más filas según sea necesario -->
+                    </tbody>
+                </table>
             </div>
-            <div class="tab-pane fade" id="content2">
+            <div class="tab-pane fade" id="crear_libro">
                 <h3>Nuevo Libro</h3>
-                <p>Este es el contenido de la segunda pestaña.</p>
+                <form method="post" action="<?php echo base_url('guardar_libro'); ?>">
+                    <div class="mb-3">
+                        <label for="titulo">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="autor">Autor</label>
+                        <input type="text" class="form-control" id="autor" name="autor" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="isbn13">isbn13</label>
+                        <input type="number" class="form-control" id="isbn13" name="isbn13" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editorial">Editorial</label>
+                        <input type="text" class="form-control" id="editorial" name="editorial" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="precio">Precio</label>
+                        <input type="number" class="form-control" id="precio" name="precio" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Libro</button>
+                </form>
             </div>
-            <div class="tab-pane fade" id="content3">
+            <div class="tab-pane fade" id="editar_libro">
                 <h3>Editar Libro</h3>
-                <p>Este es el contenido de la tercera pestaña.</p>
+                <form>
+                    <div class="mb-3">
+                        <label for="titulo">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="autor">Autor</label>
+                        <input type="text" class="form-control" id="autor" name="autor" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="isbn13">isbn13</label>
+                        <input type="number" class="form-control" id="isbn13" name="isbn13" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editorial">Editorial</label>
+                        <input type="text" class="form-control" id="editorial" name="editorial" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="precio">Precio</label>
+                        <input type="number" class="form-control" id="precio" name="precio" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
             </div>
         </div>
     </div>

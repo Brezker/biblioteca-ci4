@@ -10,5 +10,5 @@ class Libro extends Model
     protected $table = 'libros';
     protected $primaryKey = 'id';
     // protected $returnType = 'array';
-    protected $allowedFields = ['titulo', 'autor', 'editorial', 'precio'];
+    protected $allowedFields = ['titulo', 'autor', 'isbn13', 'editorial', 'precio'];
 }
