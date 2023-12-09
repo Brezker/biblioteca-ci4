@@ -300,7 +300,9 @@
                                 <td><?php echo $libro['precio']; ?></td>
                                 <td>
                                     <button type="button" class="btn btn-primary">Editar</button>
-                                    <button type="button" class="btn btn-danger">Eliminar</button>
+                                    <form action="<?php echo base_url('borrar_libro/' . $libro['id']); ?>" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?')">Eliminar</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

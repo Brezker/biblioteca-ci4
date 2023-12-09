@@ -36,4 +36,12 @@ class Libros extends Controller
 
         return redirect()->to(base_url('/listar_libros'));
     }
+
+    public function borrarLibro($id)
+    {
+        $libro = new Libro();
+        $libro->delete($id);
+
+        return redirect()->to(base_url('/listar_libros'));
+    }
 }
