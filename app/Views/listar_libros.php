@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <!-- STYLES -->
     <style {csp-style-nonce}>
@@ -259,6 +260,51 @@
         </div>
     </header>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnEditar = document.querySelectorAll('.btn-editar');
+            const editarLibroTab = document.getElementById('editar_libro_tab');
+            const seccionEditar = document.getElementById('editar_libro');
+            const libroIdInput = document.getElementById('libro_id');
+
+            const tituloInput = document.getElementById('titulo_editar');
+            const autorInput = document.getElementById('autor_editar');
+            const isbn13Input = document.getElementById('isbn13_editar');
+            const editorialInput = document.getElementById('editorial_editar');
+            const precioInput = document.getElementById('precio_editar');
+
+            btnEditar.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const libroId = this.dataset.libroId;
+
+                    // Setea el ID del libro en el campo oculto
+                    libroIdInput.value = libroId;
+
+                    // Realiza una solicitud AJAX para obtener los detalles del libro
+                    fetch('<?php echo base_url('detalles_libro/'); ?>' + libroId)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Llena los campos del formulario con los datos del libro
+                            tituloInput.value = data.titulo;
+                            autorInput.value = data.autor;
+                            isbn13Input.value = data.isbn13;
+                            editorialInput.value = data.editorial;
+                            precioInput.value = data.precio;
+
+                            // Muestra la sección de edición
+                            editarLibroTab.style.display = 'block';
+                            seccionEditar.style.display = 'block';
+
+                            // Activa el tab de edición después de mostrar la sección
+                            $('#tab3').tab('show');
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        });
+    </script>
+
+
     <div class="container mt-5">
         <h1 class="text-center">CRUD Libros</h1>
 
@@ -270,7 +316,8 @@
             <li class="nav-item">
                 <a class="nav-link" id="tab2" data-bs-toggle="tab" href="#crear_libro">Create</a>
             </li>
-            <li class="nav-item">
+
+            <li class="nav-item" id="editar_libro_tab" style="display: none;">
                 <a class="nav-link" id="tab3" data-bs-toggle="tab" href="#editar_libro">Edit</a>
             </li>
         </ul>
@@ -280,7 +327,7 @@
         <div class="tab-content mt-3">
             <div class="tab-pane fade show active" id="ver_libros">
                 <h3>Libros</h3>
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Título</th>
@@ -290,7 +337,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-group-divider">
                         <!-- Aquí irán los datos de los libros -->
                         <?php foreach ($libros as $libro) : ?>
                             <tr>
@@ -299,7 +346,11 @@
                                 <td><?php echo $libro['editorial']; ?></td>
                                 <td><?php echo $libro['precio']; ?></td>
                                 <td>
-                                    <button type="button" class="btn btn-primary">Editar</button>
+                                    <form action="<?php echo base_url('editar_libro/' . $libro['id']); ?>" method="post" style="display:inline;">
+                                        <button type="button" class="btn btn-primary btn-editar" data-libro-id="<?php echo $libro['id']; ?>">
+                                            Editar
+                                        </button>
+                                    </form>
                                     <form action="<?php echo base_url('borrar_libro/' . $libro['id']); ?>" method="post" style="display:inline;">
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?')">Eliminar</button>
                                     </form>
@@ -338,26 +389,27 @@
             </div>
             <div class="tab-pane fade" id="editar_libro">
                 <h3>Editar Libro</h3>
-                <form>
+                <form method="post" action="<?php echo base_url('guardar_libro'); ?>" id="form_editar_libro" data-bs-target="#editar_tab">
+                    <input type="hidden" id="libro_id" name="id" value="">
                     <div class="mb-3">
-                        <label for="titulo">Título</label>
-                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        <label for="titulo_editar">Título</label>
+                        <input type="text" class="form-control" id="titulo_editar" name="titulo_editar" value="<?php echo $libro['titulo']; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="autor">Autor</label>
-                        <input type="text" class="form-control" id="autor" name="autor" required>
+                        <label for="autor_editar">Autor</label>
+                        <input type="text" class="form-control" id="autor_editar" name="autor_editar" value="<?php echo $libro['autor']; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="isbn13">isbn13</label>
-                        <input type="number" class="form-control" id="isbn13" name="isbn13" required>
+                        <label for="isbn13_editar">isbn13</label>
+                        <input type="number" class="form-control" id="isbn13_editar" name="isbn13_editar" value="<?php echo $libro['isbn13']; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="editorial">Editorial</label>
-                        <input type="text" class="form-control" id="editorial" name="editorial" required>
+                        <label for="editorial_editar">Editorial</label>
+                        <input type="text" class="form-control" id="editorial_editar" name="editorial_editar" value="<?php echo $libro['editorial']; ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="precio">Precio</label>
-                        <input type="number" class="form-control" id="precio" name="precio" required>
+                        <label for="precio_editar">Precio</label>
+                        <input type="number" class="form-control" id="precio_editar" name="precio_editar" value="<?php echo $libro['precio']; ?>" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </form>

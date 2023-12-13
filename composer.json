@@ -35,5 +35,8 @@
     },
     "scripts": {
         "test": "phpunit"
+    },
+    "provide": {
+    "codeigniter4/authentication-implementation": "1.0"
     }
 }
